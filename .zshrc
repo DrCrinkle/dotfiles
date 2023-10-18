@@ -10,6 +10,9 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+#clean up dotfiles
+eval "$(antidot init)"
+
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -77,10 +80,17 @@ mntiso() {
       echo "File ('$1') does not exist!"
    fi
 }
+
+# Better history
+# Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
+
 #my disc drive (HL-DT-ST BD-RE  WH16NS40) has an offset of +6 according to AccurateRip
 alias cyanrip="cyanrip -s +6"
 
 alias ls="ls --color=auto"
-
-#clean up dotfiles
-eval "$(antidot init)"
