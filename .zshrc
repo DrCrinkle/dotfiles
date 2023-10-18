@@ -80,5 +80,7 @@ mntiso() {
 #my disc drive (HL-DT-ST BD-RE  WH16NS40) has an offset of +6 according to AccurateRip
 alias cyanrip="cyanrip -s +6"
 
+alias ls="ls --color=auto"
+
 #clean up dotfiles
 eval "$(antidot init)"
