@@ -2,6 +2,8 @@
 
 system_type=$(uname -s)
 
+echo "Bootstrapping for system type $system_type"
+
 # Because Git submodule commands cannot operate without a work tree, they must
 # be run from within $HOME (assuming this is the root of your dotfiles)
 cd "$HOME"
@@ -23,3 +25,16 @@ if [ "$system_type" = "Darwin" ]; then
   fi
 
 fi
+
+if command -v apt-get >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install zsh-autosuggestions zsh-syntax-highlighting zsh -y
+fi
+
+if command -v pacman >/dev/null 2>&1; then
+    sudo pacman -Syu zsh-autosuggestions zsh-syntax-highlighting zsh --noconfirm
+fi
+
+echo "Changing shell to zsh"
+chsh -s `which zsh`
+echo "you may need to relog for changes to take effect"
