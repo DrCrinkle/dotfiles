@@ -85,6 +85,17 @@ mntiso() {
    fi
 }
 
+quick-warc() {
+   if [ -f $1.warc.gz ]; then
+      echo "$1.warc.gz already exists"
+   else
+      wget --warc-file=$1 --warc-cdx --mirror --page-requisites --no-check-certificate --restrict-file-names=windows \
+      -e robots=off --waitretry 5 --timeout 60 --tries 5 --wait 1 \
+      -U "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27" \
+      "http://$1/"
+   fi
+}
+
 # Better history
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
 autoload -U up-line-or-beginning-search
