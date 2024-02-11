@@ -21,25 +21,29 @@ setopt appendhistory
 ## Filter Dolphin "cd" commands
 HISTORY_IGNORE=" cd *"
 
-## TODO: modify to remove spaces from input
 transfer() {
    if [ $# -eq 0 ]; then
-      echo "No arguments specified.\nUsage:\n  transfer <file|directory>\n  ... | transfer <file_name>">&2
+      echo "No arguments specified.\nUsage:\n  transfer <file|directory>\n  ... | transfer <file_name>" >&2
       return 1
    elif tty -s; then
       file="$1"
-      file_name=$(basename "$file")
+      # Remove spaces from file or directory name
+      file_name=$(basename "$file" | sed 's/ /_/g')
       if [ ! -e "$file" ]; then
-         echo "$file: No such file or directory">&2
-         return 1;
+         echo "$file: No such file or directory" >&2
+         return 1
       elif [ -d "$file" ]; then
+         # Use modified file_name for directories as well
          file_name="$file_name.zip"
-         (cd "$file"&&zip -r -q - .) | curl -v --progress-bar --upload-file "-" "https://transfer.sh/$file_name" | tee /dev/null
+         (cd "$file" && zip -r -q - .) | curl -v --progress-bar --upload-file "-" "https://transfer.sh/$file_name" | tee /dev/null
       else
+         # Use modified file_name for files
          cat "$file" | curl -v --progress-bar --upload-file "-" "https://transfer.sh/$file_name" | tee /dev/null
       fi
    else
-      file_name=$1
+      # This part handles input from a pipe, where a file name must be specified as an argument
+      # Remove spaces from the specified file_name
+      file_name=$(echo "$1" | sed 's/ /_/g')
       curl -v --progress-bar --upload-file "-" "https://transfer.sh/$file_name" | tee /dev/null
    fi
 }
